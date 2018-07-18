@@ -5,7 +5,8 @@
 }
 <h1>Available Books</h1>
 
-@foreach(var book in Model)
+@foreach(var book in Model[1])
 {
     <p>@book.name</p><br>
+    <form action="/checkout/@Model[0]/@book.id/addnew" method="post"><button type="submit" class="btn btn-danger">Checkout</button></form>
 }

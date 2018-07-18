@@ -10,7 +10,7 @@ namespace Library.Models
         public string name { get; set; }   
         public int qty { get; set; }
 
-        public Book(string bookName, int bookQty = 0, int bookId = 0)
+        public Book(string bookName, int bookId = 0, int bookQty = 0)
         {
             id = bookId;
             qty = bookQty;
