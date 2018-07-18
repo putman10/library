@@ -72,7 +72,7 @@ namespace Library.Models
             MySqlConnection conn = DB.Connection();
             conn.Open();
 
-            for (int i = qty; i <= qty; i++)
+            for (int i = 1; i <= qty; i++)
             {
                 MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
                 cmd.CommandText = @"INSERT INTO copies (books_id, available) VALUES (@BookId, @AvailableStatus);";
@@ -81,7 +81,7 @@ namespace Library.Models
                 cmd.Parameters.AddWithValue("@AvailableStatus", true);
 
                 cmd.ExecuteNonQuery();
-                id = (int)cmd.LastInsertedId;
+                //id = (int)cmd.LastInsertedId;
             }
 
             conn.Close();

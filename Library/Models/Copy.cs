@@ -17,26 +17,5 @@ namespace Library.Models
             available = availableCopy;
         }
 
-        public void Save()
-        {
-
-            MySqlConnection conn = DB.Connection();
-            conn.Open();
-
-            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText = @"INSERT INTO copies (books_id, available) VALUES (@BookId., @AvailableStatus);";
-
-            cmd.Parameters.AddWithValue("@BookId", bookId);
-            cmd.Parameters.AddWithValue("@AvailableStatus", available);
-
-            cmd.ExecuteNonQuery();
-            id = (int)cmd.LastInsertedId;
-
-            conn.Close();
-            if (conn != null)
-            {
-                conn.Dispose();
-            }
-        }
     }
 }
