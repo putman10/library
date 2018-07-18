@@ -40,6 +40,29 @@ namespace Library.Models
             }
         }
 
+        public static void CreateBookAuthorPairing(int bookId, string[] selectedAuthors)
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+
+            for (int i = 0; i < selectedAuthors.Count(); i++)
+            {
+                MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+                cmd.CommandText = @"INSERT INTO books_authors (books_Id, author_id) VALUES ( @BookId, @AuthorId);";
+
+                cmd.Parameters.AddWithValue("@BookId", bookId);
+                cmd.Parameters.AddWithValue("@AuthorId", selectedAuthors[i]);
+
+                cmd.ExecuteNonQuery();
+                //id = (int)cmd.LastInsertedId;
+            }
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+        }
+
         public static List<Author> GetAll()
         {
             List<Author> allAuthors = new List<Author> { };

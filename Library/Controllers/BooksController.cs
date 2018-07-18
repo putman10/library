@@ -27,6 +27,8 @@ namespace Library.Controllers
             string[] selectedAuthors = Request.Form["authors"];
             Book newBook = new Book(title, qty);
             newBook.Save();
+            int bookId = Book.FindLastAdded();
+            Author.CreateBookAuthorPairing(bookId, selectedAuthors);
             newBook.SaveCopies();
             return RedirectToAction("Index");
         }
