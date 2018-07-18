@@ -106,5 +106,38 @@ namespace Library.Models
                 conn.Close();
             }
         }
+
+        public static List<Book> AvailableBooks()
+        {
+            List<Book> allAvailableBooks = new List<Book> { };
+
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"SELECT DISTINCT books.* FROM copies JOIN books on (copies.books_id = books.id) WHERE copies.available = true;";
+
+            //cmd.CommandText = @"SELECT items.* FROM categories
+                //JOIN categories_items ON (categories.id = categories_items.category_id)
+                //JOIN items ON (categories_items.item_id = items.id)
+                //WHERE categories.id = @CategoryId;";
+
+            MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+            while (rdr.Read())
+            {
+                int idRdr = rdr.GetInt32(0);
+                string titleRdr = rdr.GetString(1);
+                Book newBook = new Book(titleRdr, idRdr);
+                allAvailableBooks.Add(newBook);
+            }
+
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+            return allAvailableBooks;
+
+        }
     }
 }

@@ -21,6 +21,12 @@ namespace Library.Controllers
             return View();
         }
 
+        [HttpGet("/books/allAvailable")]
+        public IActionResult AvailableBooks()
+        {
+            return View(Book.AvailableBooks());
+        }
+
         [HttpPost("/books/new")]
         public IActionResult NewBook(string title, int qty)
         {
