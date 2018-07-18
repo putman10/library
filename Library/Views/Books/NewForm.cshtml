@@ -15,5 +15,18 @@
     <label for="qty">Quantity</label>
     <input type="number" class="form-control" name="qty" id="qty" >
   </div>
+    <div class="form-group">
+      <label for="authors">Choose an existing Author or Authors:</label>
+
+        <select multiple class="form-control" name="authors" required>
+            <option value="0">----</option>
+            @foreach(var author in Model)
+            {
+            <option value="@author.id">@author.name</option>
+            }
+        </select>
+        
+     </div>  
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+

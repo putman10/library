@@ -18,12 +18,13 @@ namespace Library.Controllers
         [HttpGet("/books/new")]
         public IActionResult NewForm()
         {
-            return View();
+            return View(Author.GetAll());
         }
 
         [HttpPost("/books/new")]
         public IActionResult NewBook(string title, int qty)
         {
+            string[] selectedAuthors = Request.Form["authors"];
             Book newBook = new Book(title, qty);
             newBook.Save();
             newBook.SaveCopies();
@@ -41,7 +42,7 @@ namespace Library.Controllers
         [HttpPost("/checkout/{id}/{bookId}/addnew")]
         public IActionResult CheckoutBook(int id, int bookId)
         {
-            //int copyId = 15;
+            
             int copyId = Checkout.Find(bookId);
             DateTime checkoutDate = DateTime.Now;
             Checkout newCheckout = new Checkout(id, copyId, checkoutDate);

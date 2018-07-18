@@ -23,7 +23,7 @@ namespace Library.Models
             conn.Open();
 
             var cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText = @"SELECT id FROM copies WHERE books_Id = @bookId and available = true;";
+            cmd.CommandText = @"SELECT MIN(id) FROM copies WHERE books_Id = @bookId and available = true;";
 
             cmd.Parameters.AddWithValue("@bookId", bookId);
 
