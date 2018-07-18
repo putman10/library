@@ -21,7 +21,7 @@ namespace Library.Models
             MySqlConnection conn = DB.Connection();
             conn.Open();
 
-            var cmd = conn.CreateCommand() as MySqlCommand;
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
             cmd.CommandText = @"INSERT INTO patrons (name) VALUES (@PatronName);";
 
             cmd.Parameters.AddWithValue("@PatronName", name);
@@ -43,7 +43,7 @@ namespace Library.Models
             MySqlConnection conn = DB.Connection();
             conn.Open();
 
-            var cmd = conn.CreateCommand() as MySqlCommand;
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
             cmd.CommandText = @"SELECT * FROM patrons;";
 
             MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
@@ -60,9 +60,24 @@ namespace Library.Models
             {
                 conn.Dispose();
             }
-
             return allPatrons;
-
         }
+
+        public static void Delete(int id)
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"DELETE FROM patrons WHERE id = @PatronId; DELETE FROM checkout WHERE patrons_id = @PatronId;";
+
+            cmd.Parameters.AddWithValue("@PatronId", id);
+
+            cmd.ExecuteNonQuery();
+            if (conn != null)
+            {
+                conn.Close();
+            }
+        }
+
     }
 }

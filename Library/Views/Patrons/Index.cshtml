@@ -1,0 +1,13 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<h1>Politicians</h1>
+<a href="/patrons/new">ADD NEW PATRON</a>
+
+@foreach(var patron in Model)
+{
+    <p>@patron.name</p><br> <form action="patrons/@patron.id/delete" method="post"><button type="submit">Delete</button></form>
+}
