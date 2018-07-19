@@ -22,14 +22,15 @@ namespace Library.Controllers
         }
 
         [HttpPost("/books/new")]
-        public IActionResult NewBook(string title, int qty)
+        public IActionResult NewBook(string title, int qty, string[] authorFields, int[] authors)
         {
-            string[] selectedAuthors = Request.Form["authors"];
-            Book newBook = new Book(title, qty);
+            int[] listOfNewAuthorIds = Author.SaveListOfAuthors(authorFields);
+            Book newBook = new Book(title, 0,  qty);
             newBook.Save();
-            int bookId = Book.FindLastAdded();
-            Author.CreateBookAuthorPairing(bookId, selectedAuthors);
             newBook.SaveCopies();
+            int bookId = Book.FindLastAdded();
+            Author.CreateBookAuthorPairing(bookId, authors);
+            Author.CreateBookAuthorPairing(bookId, listOfNewAuthorIds);
             return RedirectToAction("Index");
         }
 
@@ -51,5 +52,11 @@ namespace Library.Controllers
             newCheckout.Save();
             return RedirectToAction("Index");
         }
+
+        //[HttpGet("/librarian")]
+        //public IActionResult Index()
+        //{
+        //    return View(Book.GetAll());
+        //}
     }
 }

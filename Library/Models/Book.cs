@@ -140,6 +140,39 @@ namespace Library.Models
 
         }
 
+        public static List<Book> PatronsCheckedOutBooks(int patronId)
+        {
+            List<Book> patronsCheckedOutBooks = new List<Book> { };
+
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"SELECT books.* FROM copies JOIN books on (copies.books_Id = books.id)
+             JOIN checkout ON (checkout.copies_Id = copies.id)
+             WHERE checkout.patrons_id= @PatronId;";
+
+            cmd.Parameters.AddWithValue("@PatronId",patronId);
+
+   
+            MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+            while (rdr.Read())
+            {
+                int idRdr = rdr.GetInt32(0);
+                string titleRdr = rdr.GetString(1);
+                Book newBook = new Book(titleRdr, idRdr);
+                patronsCheckedOutBooks.Add(newBook);
+            }
+
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+            return patronsCheckedOutBooks;
+
+        }
+
         public static int FindLastAdded()
         {
             int lastAddedId = 0;

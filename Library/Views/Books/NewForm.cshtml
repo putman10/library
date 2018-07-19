@@ -1,7 +1,5 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+  Layout = "_Layout";
 }
 
 <h1>Add New Books</h1>
@@ -15,17 +13,21 @@
     <label for="qty">Quantity</label>
     <input type="number" class="form-control" name="qty" id="qty" >
   </div>
+    <h3>Add Authors for this book:</h3>
     <div class="form-group">
       <label for="authors">Choose an existing Author or Authors:</label>
-
-        <select multiple class="form-control" name="authors" required>
-            <option value="0">----</option>
+        <select multiple class="form-control" name="authors">
             @foreach(var author in Model)
             {
             <option value="@author.id">@author.name</option>
             }
         </select>
-        
+     </div>
+     <div class="form-group">
+        <label for="authorFields">Add new Authors:</label>        
+        <div id="fields"><input class="form-control" type="text" name="authorFields" /><br/></div>
+        <br/>
+        <button type="button" class="btn btn-danger" id="btnAddField">Add another new author</button>  
      </div>  
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>

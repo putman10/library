@@ -9,7 +9,7 @@ namespace Library.Controllers
 {
     public class PatronsController : Controller
     {
-        [HttpGet("/patrons")]
+        [HttpGet("librarian/all-patrons")]
         public IActionResult Index()
         {
             return View(Patron.GetAll());
@@ -18,7 +18,7 @@ namespace Library.Controllers
         [HttpGet("/patrons/new")]
         public IActionResult NewForm()
         {
-            return View(Patron.GetAll());
+            return View();
         }
 
         [HttpPost("/patrons/new")]
@@ -26,7 +26,19 @@ namespace Library.Controllers
         {
             Patron newPatron = new Patron(name);
             newPatron.Save();
-            return RedirectToAction("Index");
+            return RedirectToAction("Home", "Index");
+        }
+
+        [HttpPost("/patrons/{id}/details")]
+        public IActionResult DetailsRoute(int patron)
+        {
+            return RedirectToAction("Details");
+        }
+
+        [HttpGet("/patrons/{id}/details")]
+        public IActionResult Details(int patron)
+        {
+            return View(Book.PatronsCheckedOutBooks(patron));
         }
 
         [HttpPost("/patrons/{id}/delete")]

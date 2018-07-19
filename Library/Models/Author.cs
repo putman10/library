@@ -40,7 +40,44 @@ namespace Library.Models
             }
         }
 
-        public static void CreateBookAuthorPairing(int bookId, string[] selectedAuthors)
+        public static int[] SaveListOfAuthors(string[] authorsList)
+        {
+
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            List<int> authorIds = new List<int>();
+
+            for (int i = 0; i < authorsList.Count(); i++)
+            {
+  
+                MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+                cmd.CommandText = @"INSERT INTO authors (name) VALUES ( @AuthorName);SELECT id FROM authors ORDER BY id DESC LIMIT 1";
+
+                cmd.Parameters.AddWithValue("@AuthorName", authorsList[i]);
+                  cmd.ExecuteNonQuery();
+
+                MySqlCommand cmdTwo = conn.CreateCommand() as MySqlCommand;
+                cmdTwo.CommandText = @"SELECT id FROM authors ORDER BY id DESC LIMIT 1";
+                MySqlDataReader rdr = cmdTwo.ExecuteReader() as MySqlDataReader;
+                while (rdr.Read())
+                {
+                int authorId = rdr.GetInt32(0);
+                authorIds.Add(authorId);
+
+                }
+                rdr.Dispose();
+            }
+
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+  
+            return authorIds.ToArray();
+        }
+
+        public static void CreateBookAuthorPairing(int bookId, int[] selectedAuthors)
         {
             MySqlConnection conn = DB.Connection();
             conn.Open();
