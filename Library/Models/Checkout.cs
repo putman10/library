@@ -51,11 +51,12 @@ namespace Library.Models
             conn.Open();
 
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText = @"INSERT INTO checkout (copies_Id, patrons_Id, checkout_date) VALUES ( @CopyId, @PatronId, @CheckoutDate); UPDATE copies SET available = false WHERE id = @copyId;";
+            cmd.CommandText = @"INSERT INTO checkout (copies_Id, patrons_Id, checkout_date) VALUES ( @CopyId, @PatronId, @CheckoutDate);";
 
             cmd.Parameters.AddWithValue("@CopyId", copyId);
             cmd.Parameters.AddWithValue("@PatronId", patronId);
             cmd.Parameters.AddWithValue("@CheckoutDate", checkoutDate);
+       
 
             cmd.ExecuteNonQuery();
             id = (int)cmd.LastInsertedId;

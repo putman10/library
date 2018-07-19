@@ -9,12 +9,6 @@ namespace Library.Controllers
 {
     public class PatronsController : Controller
     {
-        [HttpGet("librarian/all-patrons")]
-        public IActionResult Index()
-        {
-            return View(Patron.GetAll());
-        }
-
         [HttpGet("/patrons/new")]
         public IActionResult NewForm()
         {
@@ -26,19 +20,39 @@ namespace Library.Controllers
         {
             Patron newPatron = new Patron(name);
             newPatron.Save();
-            return RedirectToAction("Home", "Index");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost("/patrons/{id}/details")]
-        public IActionResult DetailsRoute(int patron)
+        public IActionResult DetailsRoute(int id)
         {
             return RedirectToAction("Details");
         }
 
         [HttpGet("/patrons/{id}/details")]
-        public IActionResult Details(int patron)
+        public IActionResult Details(int id)
         {
-            return View(Book.PatronsCheckedOutBooks(patron));
+            List<object> model = new List<object>() {Book.PatronsCheckedOutBooks(id), Patron.Find(id) };
+            return View(model);
+        }
+
+        [HttpGet("/patrons/{id}/checkout")]
+        public IActionResult AvailableBooks(int id)
+        {
+            List<Book> books = Book.AvailableBooks();
+            List<object> model = new List<object>() { id, books };
+            return View(model);
+        }
+
+        [HttpPost("/patrons/{id}/{bookId}/checkout")]
+        public IActionResult CheckoutBook(int id, int bookId)
+        {
+
+            int copyId = Checkout.Find(bookId);
+            DateTime checkoutDate = DateTime.Now;
+            Checkout newCheckout = new Checkout(id, copyId, checkoutDate);
+            newCheckout.Save();
+            return RedirectToAction("Details");
         }
 
         [HttpPost("/patrons/{id}/delete")]
@@ -46,6 +60,12 @@ namespace Library.Controllers
         {
             Patron.Delete(id);
             return RedirectToAction("Index");
+        }
+
+        [HttpGet("librarian/all-patrons")]
+        public IActionResult Index()
+        {
+            return View(Patron.GetAll());
         }
     }
 }

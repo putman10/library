@@ -160,8 +160,8 @@ namespace Library.Models
             {
                 int idRdr = rdr.GetInt32(0);
                 string titleRdr = rdr.GetString(1);
-                Book newBook = new Book(titleRdr, idRdr);
-                patronsCheckedOutBooks.Add(newBook);
+                Book newbook = new Book(titleRdr, idRdr);
+                patronsCheckedOutBooks.Add(newbook);
             }
 
             conn.Close();
@@ -195,6 +195,56 @@ namespace Library.Models
                 conn.Dispose();
             }
             return lastAddedId;
+        }
+
+        public static Book Find(int bookId)
+        {
+            string foundBookName = "";
+
+
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"SELECT * FROM books WHERE id = @BookId";
+
+            cmd.Parameters.AddWithValue("@BookId", bookId);
+
+            MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+            while (rdr.Read())
+            {
+                foundBookName = rdr.GetString(1);
+            }
+
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+
+            Book foundBook = new Book(foundBookName, bookId); 
+            return foundBook;
+        }
+
+        public static void Update(string newName, int bookId)
+        {
+
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"UPDATE books SET title = @NewName WHERE id = @BookId";
+
+            cmd.Parameters.AddWithValue("@NewName", newName);
+            cmd.Parameters.AddWithValue("@BookId", bookId);
+
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
         }
     }
 }

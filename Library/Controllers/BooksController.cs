@@ -4,17 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Library.Models;
+using System.Diagnostics.Contracts;
 
 namespace Library.Controllers
 {
     public class BooksController : Controller
     {
-        [HttpGet("/books")]
-        public IActionResult Index()
-        {
-            return View(Book.GetAll());
-        }
-
         [HttpGet("/books/new")]
         public IActionResult NewForm()
         {
@@ -24,39 +19,56 @@ namespace Library.Controllers
         [HttpPost("/books/new")]
         public IActionResult NewBook(string title, int qty, string[] authorFields, int[] authors)
         {
-            int[] listOfNewAuthorIds = Author.SaveListOfAuthors(authorFields);
-            Book newBook = new Book(title, 0,  qty);
+            
+            Book newBook = new Book(title, 0, qty);
             newBook.Save();
             newBook.SaveCopies();
             int bookId = Book.FindLastAdded();
             Author.CreateBookAuthorPairing(bookId, authors);
-            Author.CreateBookAuthorPairing(bookId, listOfNewAuthorIds);
-            return RedirectToAction("Index");
+
+            if (!(authorFields[0] == null))
+            {
+                int[] listOfNewAuthorIds = Author.SaveListOfAuthors(authorFields);
+                Author.CreateBookAuthorPairing(bookId, listOfNewAuthorIds);
+            }
+            return RedirectToAction("LibrarianIndex");
         }
 
-        [HttpGet("/books/{id}/available")]
-        public IActionResult AvailableBooks(int id)
+
+        [HttpGet("/librarian")]
+        public IActionResult LibrarianIndex()
         {
-            List<Book> books = Book.AvailableBooks();
-            List<object> model = new List<object>() { id, books};
-            return View(model);
+            return View(Book.GetAll());
         }
 
-        [HttpPost("/checkout/{id}/{bookId}/addnew")]
-        public IActionResult CheckoutBook(int id, int bookId)
+        [HttpGet("/books/{id}/copies")]
+        public IActionResult Copies(int id)
         {
-            
-            int copyId = Checkout.Find(bookId);
-            DateTime checkoutDate = DateTime.Now;
-            Checkout newCheckout = new Checkout(id, copyId, checkoutDate);
-            newCheckout.Save();
-            return RedirectToAction("Index");
+            Contract.Ensures(Contract.Result<IActionResult>() != null);
+
+            return View(Copy.GetAllOfOneBook(id));
         }
 
-        //[HttpGet("/librarian")]
-        //public IActionResult Index()
-        //{
-        //    return View(Book.GetAll());
-        //}
+        [HttpPost("/books/{bookId}/{copyId}/delete")]
+        public IActionResult DeleteCopy(int copyId, int bookId)
+        {
+            Copy.Delete(copyId);
+
+            return RedirectToAction("Copies", new { id = bookId }); 
+        }
+
+        [HttpGet("/books/{id}/update")]
+        public IActionResult UpdateForm(int id)
+        {
+            return View(Book.Find(id));
+        }
+
+        [HttpPost("/books/{id}/update")]
+        public IActionResult UpdateBook(int id, string newName)
+        {
+            Book.Update(newName, id);
+            return RedirectToAction("LibrarianIndex");
+        }
+
     }
 }

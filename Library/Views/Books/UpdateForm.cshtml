@@ -1,0 +1,14 @@
+﻿@{
+  Layout = "_Layout";
+}
+
+<h1>Update Books</h1>
+
+<form action="/books/@Model.id/update" method="post">
+   <div class="form-group">
+    <label for="newName">Title</label>
+    <input type="text" class="form-control" value="@Model.name" name="newName" id="newName" >
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+

@@ -2,7 +2,7 @@
   Layout = "_Layout";
 }
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-sm-6">
         <h1>Patron Login</h1>
         <form action="" method="post" id="patronLogin" name="patronLogin">
             <select name="patron">
@@ -15,21 +15,10 @@
             </select>   
             <button class="btn btn-primary" type="submit">Login</button>
         </form>
+         <a href="/patrons/new" class="btn btn-primary" type="submit">Register New Patron</a>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-6">
+    <div class="col-sm-6">
         <h1>Librarian Login</h1>
-        <form action="" method="post" id="patronLogin" name="patronLogin">
-            <select name="patron">
-                <option value="" disabled selected>Select your name</option>
-                @foreach(var patron in Model)
-                {
-                <option value="@patron.id">@patron.name</option>
-                }
-
-            </select>   
-            <button class="btn btn-primary" type="submit">Login</button>
-        </form>
+             <a href="/librarian" class="btn btn-primary" type="submit">Login</a>
     </div>
 </div>

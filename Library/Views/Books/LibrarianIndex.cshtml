@@ -1,0 +1,10 @@
+﻿@{
+  Layout = "_Layout";
+}
+<a href="/books/new" class="btn btn-danger" type="submit">Add New Book</a>
+<ul>
+    @foreach(var book in Model)
+    {
+       <li> <a href="books/@book.id/copies">@book.name </a><a href="books/@book.id/update" class="btn btn-primary"> UPDATE BOOK</a> </li>
+    }
+</ul>

@@ -1,0 +1,10 @@
+﻿@{
+  Layout = "_Layout";
+}
+
+<ul>
+    @foreach(var copy in Model)
+    {
+       <li> Copy id: @copy.id <form action="@copy.id/delete" method="post"><button type="submit" class="btn btn-primary"> DELETE THIS COPY</button> </form></li>
+    }
+</ul>
